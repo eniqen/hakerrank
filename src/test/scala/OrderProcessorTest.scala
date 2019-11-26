@@ -115,6 +115,19 @@ class OrderProcessorTest extends FunSuite with MustMatchers with TypeCheckedTrip
     fixture(input)(inStream => OrderProcessor.process(inStream) must ===(Left(List(TiError(1), LiError(2)))))
   }
 
+
+  test("provided risk data") {
+    val input =
+      """3
+        | 0 3
+        | 5 6
+        | 15 9
+        |""".stripMargin
+    fixture(input)(inStream => OrderProcessor.process(inStream) must === (Right(11L)))
+  }
+
+//  input = """3 |0 3 |5 6 |15 9 |""".stripMargin
+
   private def fixture(in: String)(assert: InputStream => Assertion): Unit = {
     val inStream: InputStream = new ByteArrayInputStream(in.getBytes(StandardCharsets.UTF_8))
     try assert(inStream) finally inStream.close()
